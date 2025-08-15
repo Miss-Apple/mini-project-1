@@ -1,11 +1,12 @@
 package ita.bootcamp.miniproject.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import ita.bootcamp.miniproject.model.Customer;
 import ita.bootcamp.miniproject.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -51,6 +52,11 @@ public class CustomerService {
         }
         ;
         return false;
+    }
+
+    // COUNT CUSTOMER
+    public Long findCustomerCount(){
+        return customerRepository.count();
     }
 
 }

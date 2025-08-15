@@ -1,55 +1,44 @@
-import { useEffect, useState } from 'react'
-import {DataCard} from './components/DataCard'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import axios from 'axios'
-import { Button, Spin } from 'antd'
-import useApi from './hooks/useApi'
-
-
+import { use, useEffect, useState } from "react";
+import { DataCard } from "./components/DataCard";
+import "./App.css";
+import axios from "axios";
+import { Spin, Typography } from "antd";
+import { ErrorMessage } from "./components/ErrorMessage";
 
 function App() {
-  const [customers, setCustomers] = useState([]);
-  const getAllCustomers = 'api/customer/all';
-  // const [daloading, result] = useApi(getAllCustomers)
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const getAllCustomers = "api/customer/all";
 
   useEffect(() => {
-    const timer = setTimeout(() => { 
-      axios.get('api/customer/all').then((response) => {
-        setCustomers(response.data);
-        console.log(response.data);
+    axios
+      .get(getAllCustomers)
+      .then((response) => {
+        setData(response.data);
+        setIsLoading(false);
+        console.log("SUCCESS");
+      })
+      .catch((err) => {
+        setIsError(err.message);
+        setIsLoading(false);
+        console.log("ERROR");
       });
-    }, 2000);
-    return () => clearTimeout(timer);
   }, []);
-
-
-  // const test = () => {
-  //   // fetch('api/customer/1')  
-  //   axios.get('api/customer/all').then((response) => {
-  //     setCustomers(response.data);
-  //     console.log(customers);
-  //   });
-  // }
-
-  //   const error = () => {
-  //   messageApi.open({
-  //     type: 'error',
-  //     content: 'This is an error message',
-  //   });
-  // };
 
   return (
     <>
-      {/* <DataCard customers={customers} /> */}
-      {/* <Button onClick={test} ></Button> */}
-      <Spin spinning={loading} tip="Loading...">
-        <DataCard customers={customers} />
+
+      <Spin spinning={isLoading} tip="Loading...">
+        {!isError && <DataCard customers={data} />}
+        {isError && (
+          <Typography.Paragraph>
+            <ErrorMessage openModal={isError} />
+          </Typography.Paragraph>
+        )}
       </Spin>
-      
     </>
-  )
+  );
 }
 
 export default App;

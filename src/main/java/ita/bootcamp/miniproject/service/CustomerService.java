@@ -13,23 +13,23 @@ public class CustomerService {
     private CustomerRepository customerRepository;
 
     // VIEW CUSTOMER
-    public Customer findCustomer(int id){
+    public Customer findCustomer(int id) {
         return customerRepository.findById(id).orElse(null);
     }
 
-    public List<Customer> viewAllCustomer(){
+    public List<Customer> viewAllCustomer() {
         return customerRepository.findAll();
     }
 
-    //CREATE CUSTOMER
-    public Customer createCustomer(Customer customer){
+    // CREATE CUSTOMER
+    public Customer createCustomer(Customer customer) {
         return customerRepository.save(customer);
     }
 
-    //UPDATE CUSTOMER
-    public Customer updateCustomer(int id, Customer customer){
+    // UPDATE CUSTOMER
+    public Customer updateCustomer(int id, Customer customer) {
         Customer foundCustomer = customerRepository.findById(id).orElse(null);
-        if(foundCustomer != null){
+        if (foundCustomer != null) {
             foundCustomer.setFirstName(customer.getFirstName());
             foundCustomer.setLastName(customer.getLastName());
             foundCustomer.setContactNumber(customer.getContactNumber());
@@ -42,13 +42,14 @@ public class CustomerService {
         return null;
     }
 
-    //DELETE CUSTOMER
-    public boolean deleteCustomer(int id){
+    // DELETE CUSTOMER
+    public boolean deleteCustomer(int id) {
         Customer foundCustomer = customerRepository.findById(id).orElse(null);
-        if(foundCustomer != null){
+        if (foundCustomer != null) {
             customerRepository.delete(foundCustomer);
             return true;
-        };
+        }
+        ;
         return false;
     }
 

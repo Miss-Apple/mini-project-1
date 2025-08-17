@@ -5,6 +5,7 @@ import axios from "axios";
 import {Button, Form, Input, Spin, Typography} from "antd";
 import {ErrorMessage} from "./components/ErrorMessage";
 import CustomerModal from "./components/CustomerModal.tsx";
+import SignUp from "./components/Signup.tsx";
 
 
 
@@ -15,6 +16,7 @@ function App() {
     const [recordCount, setRecordCount] = useState(0);
     const [customer, setCustomer] = useState(null);
     const [openModal, setOpenModal] = useState(false);
+    const [showSignUp, setShowSignUp] = useState(false);
     const getAllCustomers = "api/customer/all";
     const findCustomerCount = "api/customer/data/count";
 
@@ -65,6 +67,10 @@ function App() {
                 console.log("ERROR");
             });
     }, []);
+
+    if (showSignUp) {
+        return <SignUp />;
+    }
 
     return (
         <>

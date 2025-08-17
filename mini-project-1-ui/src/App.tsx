@@ -1,107 +1,104 @@
-import {useEffect, useState} from "react";
-import {DataCard} from "./components/DataCard";
 import "./App.css";
-import axios from "axios";
-import {Button, Form, Input, Spin, Typography} from "antd";
-import {ErrorMessage} from "./components/ErrorMessage";
-import CustomerModal from "./components/CustomerModal.tsx";
-import SignUp from "./components/Signup.tsx";
+import {Breadcrumb, Button, Layout, Menu, type MenuProps, theme} from "antd";
+import {Content, Header} from "antd/es/layout/layout";
+import Title from "antd/es/typography/Title";
+import {Link, Outlet} from "react-router-dom";
+import Sider from "antd/es/layout/Sider";
+import {useState} from "react";
+import {HomeOutlined, UserOutlined} from "@ant-design/icons";
 
+const menuItems: MenuProps['items'] = [
+    {
+        label: <Link to='/'>Home</Link>,
+        key: '/',
+        icon: <HomeOutlined/>
+    },
+    {
+        label: <Link to='/customer'>Customer Search</Link>,
+        key: '/customer',
+        icon: <UserOutlined/>
+    },
+];
+
+const siderItems: MenuProps['items'] = [
+    {
+        key: 1,
+        label: 'Search',
+    },
+    {
+        key: 2,
+        label: 'Transactions'
+    },
+    {
+        key: 3,
+        label: 'Cargo'
+    }
+];
+
+const layoutStyle = {
+    overflow: 'hidden',
+    minHeight: '100vh',
+};
+const headerStyle = {
+    color: '#fff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+};
 
 
 function App() {
-    const [data, setData] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [isError, setIsError] = useState(false);
-    const [recordCount, setRecordCount] = useState(0);
-    const [customer, setCustomer] = useState(null);
-    const [openModal, setOpenModal] = useState(false);
-    const [showSignUp, setShowSignUp] = useState(false);
-    const getAllCustomers = "api/customer/all";
-    const findCustomerCount = "api/customer/data/count";
-
-    const [form] = Form.useForm();
-
-    const onFinish = (value: { inputCusId: string; }) => {
-        const findCustomerById = "api/customer/" + value.inputCusId;
-        axios
-            .get(findCustomerById)
-            .then((response) => {
-                setCustomer(response.data);
-                setIsLoading(false);
-                setOpenModal(true)
-                console.log("SUCCESS")
-                console.log("openModal: " + open);
-            })
-            .catch((err) => {
-                setIsError(err.message);
-                setIsLoading(false);
-                console.log("ERROR");
-            });
-        console.log(customer);
-    };
-
-    useEffect(() => {
-        axios
-            .get(getAllCustomers)
-            .then((response) => {
-                setData(response.data);
-                setIsLoading(false);
-                console.log("SUCCESS");
-            })
-            .catch((err) => {
-                setIsError(err.message);
-                setIsLoading(false);
-                console.log("ERROR");
-            });
-        axios
-            .get(findCustomerCount)
-            .then((response) => {
-                setRecordCount(response.data);
-                setIsLoading(false);
-                console.log("SUCCESS");
-            })
-            .catch((err) => {
-                setIsError(err.message);
-                setIsLoading(false);
-                console.log("ERROR");
-            });
-    }, []);
-
-    if (showSignUp) {
-        return <SignUp />;
-    }
+    const {
+        token: {colorBgContainer, borderRadiusLG},
+    } = theme.useToken();
+    const [currMenuItem, setCurrMenuItem] = useState(location.pathname);
+    const [currSiderItem, setCurrSiderItem] = useState('');
 
     return (
-        <>
-            <Spin spinning={isLoading} tip="Loading...">
-                {!isError && <DataCard customers={data}/>}
-                {isError && (
-                    <Typography.Paragraph>
-                        <ErrorMessage openModal={isError}/>
-                    </Typography.Paragraph>
-                )}
-            </Spin>
-            <Form
-                form={form}
-                name="control-hooks"
-                onFinish={onFinish}
-                style={{ maxWidth: 600 }}>
-                <Form.Item name="inputCusId" label="Find Customer">
-                    <Input />
-                </Form.Item>
-                <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                        Submit
-                    </Button>
-                </Form.Item>
-            </Form>
-            <Typography.Text>{recordCount}</Typography.Text>
-            {openModal &&
-                <CustomerModal openModal={openModal} customer={customer}/>
-            }
-        </>
-
+        <Layout style={layoutStyle}>
+            <Header style={headerStyle}>
+                <Title level={4} style={{color: 'white'}}>Cargo Shipping System</Title>
+                <Menu
+                    theme="dark"
+                    mode="horizontal"
+                    defaultSelectedKeys={['1']}
+                    selectedKeys={[currMenuItem]}
+                    items={menuItems}
+                    style={{flex: 1, minWidth: 0}}
+                    onClick={(e) => setCurrMenuItem(e.key)}
+                />
+                <Button type="default">Log out</Button>
+            </Header>
+            <Layout hasSider>
+                <Sider width={200} style={{background: colorBgContainer}}>
+                    <Menu
+                        mode="inline"
+                        defaultSelectedKeys={['1']}
+                        selectedKeys={[currSiderItem]}
+                        items={siderItems}
+                        style={{height: '100%', borderInlineEnd: 0}}
+                        onClick={(e) => setCurrSiderItem(e.key)}
+                    />
+                </Sider>
+                <Layout style={{padding: '0 24px 24px'}}>
+                    <Breadcrumb
+                        items={[{title: 'Customer'}, {title: 'Search'}]}
+                        style={{margin: '16px 0'}}
+                    />
+                    <Content
+                        style={{
+                            padding: 24,
+                            margin: 0,
+                            minHeight: 280,
+                            background: colorBgContainer,
+                            borderRadius: borderRadiusLG,
+                        }}
+                    >
+                        <Outlet/>
+                    </Content>
+                </Layout>
+            </Layout>
+        </Layout>
     );
 }
 

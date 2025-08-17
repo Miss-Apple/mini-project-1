@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import ita.bootcamp.miniproject.model.Customer;
+import ita.bootcamp.miniproject.repository.CustomerRepository;
 import ita.bootcamp.miniproject.service.CustomerService;
 import lombok.AllArgsConstructor;
 
@@ -18,6 +19,7 @@ import lombok.AllArgsConstructor;
 public class CustomerController {
 
     private CustomerService customerService;
+    private CustomerRepository customerRepository;
 
     @GetMapping("/{id}")
     public ResponseEntity<Customer> findCustomer(@PathVariable int id) {
@@ -57,5 +59,10 @@ public class CustomerController {
         return new ResponseEntity<>(customerCount, HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Customer>> search(@RequestParam String keyword) {
+        List<Customer> results = customerService.search(keyword);
+        return new ResponseEntity<>(results, HttpStatus.OK);
+    }
 
 }

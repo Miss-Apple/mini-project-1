@@ -59,4 +59,16 @@ public class CustomerService {
         return customerRepository.count();
     }
 
+public List<Customer> search(String keyword) {
+        // Try to parse as ID
+        try {
+            int id = Integer.parseInt(keyword);
+            return customerRepository.findById(id)
+                    .map(List::of) // wrap single customer in list
+                    .orElse(List.of()); // return empty list if not found
+        } catch (NumberFormatException e) {
+            // Not an integer → search by name
+            return customerRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(keyword, keyword);
+        }
+    }
 }

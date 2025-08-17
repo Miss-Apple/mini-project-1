@@ -4,7 +4,8 @@ import './index.css'
 import App from './App.tsx'
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import {HomePage} from "./pages/HomePage.tsx";
-import CustomerSearch from "./components/CustomerSearch.tsx";
+import CustomerSearch from "./pages/CustomerSearch.tsx";
+import Index from "./pages/Index.tsx";
 
 const router = createBrowserRouter([
         {
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
             children: [
                 {
                     index: true,
+                    element: <Index />
+                },
+                {
+                    path: '/home',
                     element: <HomePage/>
                 },
                 {

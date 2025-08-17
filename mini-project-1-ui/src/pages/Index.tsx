@@ -1,8 +1,7 @@
 import autumn from "../assets/fall-autumn-red-season.jpg";
-import uma from "../assets/uma.jpg";
-import React, { useState } from "react";
-import SignUp from "./Signup.tsx";
-import "./Login.css";
+import SignUp from "../components/Signup.tsx";
+import "../components/Login.css";
+import {useState} from "react";
 
 function Index() {
     const [showSignUp, setShowSignUp] = useState(false);

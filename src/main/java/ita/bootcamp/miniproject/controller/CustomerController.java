@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import ita.bootcamp.miniproject.model.Customer;
-import ita.bootcamp.miniproject.repository.CustomerRepository;
 import ita.bootcamp.miniproject.service.CustomerService;
 import lombok.AllArgsConstructor;
 
@@ -19,7 +18,6 @@ import lombok.AllArgsConstructor;
 public class CustomerController {
 
     private CustomerService customerService;
-    private CustomerRepository customerRepository;
 
     @GetMapping("/{id}")
     public ResponseEntity<Customer> findCustomer(@PathVariable int id) {

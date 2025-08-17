@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
+import { Table, Input, Button, Empty } from "antd";
+import type { ColumnsType } from "antd/es/table";
 
 interface Customer {
   customerId: number;
@@ -13,81 +14,71 @@ interface Customer {
 }
 
 const CustomerSearch: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [query, setQuery] = useState("");
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (searchTerm.trim() === "") {
-      setCustomers([]); // clear table if input empty
-      return;
+  const handleSearch = async () => {
+    if (!query.trim()) {
+      setCustomers([]); 
     }
 
-    setLoading(true);
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/customer/search?keyword=${query}`
+      );
+      if (!response.ok) throw new Error("Search failed");
+      const data = await response.json();
+      setCustomers(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    axios
-      .get(`http://localhost:8080/api/customer/search?keyword=${searchTerm}`)
-      .then((res) => {
-        setCustomers(res.data);
-        setLoading(false);
-      })
-      .catch(() => {
-        setCustomers([]);
-        setLoading(false);
-      });
-  }, [searchTerm]);
+  const columns: ColumnsType<Customer> = [
+    { title: "Customer ID", dataIndex: "customerId", key: "customerId" },
+    { title: "First Name", dataIndex: "firstName", key: "firstName" },
+    { title: "Last Name", dataIndex: "lastName", key: "lastName" },
+    { title: "Contact Number", dataIndex: "contactNumber", key: "contactNumber" },
+    { title: "Email Address", dataIndex: "emailAddress", key: "emailAddress" },
+    {
+    title: "Home Address",
+    key: "fullAddress",
+    render: (_, record) => `${record.addressLine1 || ""} ${record.addressLine2 || ""}`.trim(),
+    },
+    { title: "Location ID", dataIndex: "locationId", key: "locationId" },
+  ];
 
   return (
     <div style={{ padding: "20px" }}>
-      <h2>Customer Search</h2>
-      <input
-        type="text"
-        placeholder="Enter ID, First Name, Last Name, or Full Name"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ marginBottom: "15px", padding: "8px", width: "300px" }}
+      {/* Search Bar */}
+      <div style={{ marginBottom: "16px", display: "flex", gap: "8px" }}>
+        <Input
+          placeholder="Search customer..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          style={{ width: 300 }}
+        />
+        <Button type="primary" onClick={handleSearch}>
+          Search
+        </Button>
+      </div>
+
+      {/* Ant Design Table */}
+      <Table
+        dataSource={customers}
+        columns={columns}
+        rowKey="customerId"
+        pagination={false}
+        locale={{
+          emptyText: (
+            <Empty
+              image="/image.png" 
+              imageStyle={{ height: 120 }}
+              description={<span>No customers found</span>}
+            />
+          ),
+        }}
       />
-
-      {loading && <p>Loading...</p>}
-
-      {!loading && customers.length > 0 && (
-        <table
-          border={1}
-          cellPadding={8}
-          style={{ borderCollapse: "collapse", width: "100%", marginTop: "20px" }}
-        >
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Contact</th>
-              <th>Email</th>
-              <th>Address Line 1</th>
-              <th>Address Line 2</th>
-              <th>Location ID</th>
-            </tr>
-          </thead>
-          <tbody>
-            {customers.map((customer) => (
-              <tr key={customer.customerId}>
-                <td>{customer.customerId}</td>
-                <td>{customer.firstName}</td>
-                <td>{customer.lastName}</td>
-                <td>{customer.contactNumber}</td>
-                <td>{customer.emailAddress}</td>
-                <td>{customer.addressLine1}</td>
-                <td>{customer.addressLine2}</td>
-                <td>{customer.locationId}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-
-      {!loading && customers.length === 0 && searchTerm && (
-        <p>No results found.</p>
-      )}
     </div>
   );
 };

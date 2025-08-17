@@ -2,15 +2,15 @@ import "./App.css";
 import {Breadcrumb, Button, Layout, Menu, type MenuProps, theme} from "antd";
 import {Content, Header} from "antd/es/layout/layout";
 import Title from "antd/es/typography/Title";
-import {Link, Outlet} from "react-router-dom";
+import {Link, Outlet, useNavigate} from "react-router-dom";
 import Sider from "antd/es/layout/Sider";
 import {useState} from "react";
-import {HomeOutlined, UserOutlined} from "@ant-design/icons";
+import {HomeOutlined, LogoutOutlined, UserOutlined} from "@ant-design/icons";
 
 const menuItems: MenuProps['items'] = [
     {
-        label: <Link to='/'>Home</Link>,
-        key: '/',
+        label: <Link to='/home'>Home</Link>,
+        key: '/home',
         icon: <HomeOutlined/>
     },
     {
@@ -48,6 +48,7 @@ const headerStyle = {
 
 
 function App() {
+    const navigate = useNavigate();
     const {
         token: {colorBgContainer, borderRadiusLG},
     } = theme.useToken();
@@ -57,7 +58,7 @@ function App() {
     return (
         <Layout style={layoutStyle}>
             <Header style={headerStyle}>
-                <Title level={4} style={{color: 'white'}}>Cargo Shipping System</Title>
+                <Title level={4} style={{color: 'white', margin: '0px 15px 5px 0px'}}>Cargo Shipping System</Title>
                 <Menu
                     theme="dark"
                     mode="horizontal"
@@ -67,7 +68,7 @@ function App() {
                     style={{flex: 1, minWidth: 0}}
                     onClick={(e) => setCurrMenuItem(e.key)}
                 />
-                <Button type="default">Log out</Button>
+                <Button type="default" icon={<LogoutOutlined/>} onClick={() => navigate('/')}>Log out</Button>
             </Header>
             <Layout hasSider>
                 <Sider width={200} style={{background: colorBgContainer}}>

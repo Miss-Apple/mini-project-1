@@ -2,6 +2,7 @@ package ita.bootcamp.miniproject.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ita.bootcamp.miniproject.model.Customer;
@@ -11,6 +12,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Service
 public class CustomerService {
+
+    @Autowired
     private CustomerRepository customerRepository;
 
     // VIEW CUSTOMER
@@ -59,4 +62,14 @@ public class CustomerService {
         return customerRepository.count();
     }
 
+    public List<Customer> search(String keyword) {
+            try {
+                int id = Integer.parseInt(keyword);
+                return customerRepository.findById(id)
+                        .map(List::of) 
+                        .orElse(List.of()); 
+            } catch (NumberFormatException e) {
+                return customerRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(keyword, keyword);
+            }
+    }
 }

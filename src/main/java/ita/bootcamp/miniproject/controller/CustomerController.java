@@ -63,5 +63,10 @@ public class CustomerController {
         return new ResponseEntity<>(customerCount, HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Customer>> search(@RequestParam String keyword) {
+        List<Customer> results = customerService.search(keyword);
+        return new ResponseEntity<>(results, HttpStatus.OK);
+    }
 
 }

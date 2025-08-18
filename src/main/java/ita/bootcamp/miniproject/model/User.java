@@ -12,21 +12,21 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Users")
+@Table(name = "USERS")
 public class User {
     @Id
-    @Column(name = "id", unique = true, updatable = false)
+    @Column(name = "ID", unique = true, updatable = false)
     private int id;
 
-    @Column(name = "username")
+    @Column(name = "USERNAME")
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "PASSWORD")
     private String password;
 
-    @Column(name = "email")
+    @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "role")
+    @Column(name = "USER_ROLE")
     private String role;
 }

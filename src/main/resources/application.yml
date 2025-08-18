@@ -3,12 +3,14 @@ spring:
         name: mini-project
 
     datasource:
-        url: jdbc:mysql://localhost:3306/cargoshippingsystem
+        url: jdbc:mysql://localhost:3306/cgoshipping
         username: root
         password:
         driver-class-name: com.mysql.cj.jdbc.Driver
-
-    security:
-      user:
-          name: admin
-          password: admin
+    jpa:
+        hibernate:
+            ddl-auto: update
+#    security:
+#      user:
+#          name: admin
+#          password: admin

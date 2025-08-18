@@ -2,7 +2,6 @@ package ita.bootcamp.miniproject.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ita.bootcamp.miniproject.model.Customer;
@@ -12,8 +11,6 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Service
 public class CustomerService {
-
-    @Autowired
     private CustomerRepository customerRepository;
 
     // VIEW CUSTOMER

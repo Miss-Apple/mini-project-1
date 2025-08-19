@@ -13,8 +13,8 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("api/customer")
-@CrossOrigin(origins = "http://localhost:5177") // URL ng frontend
+@RequestMapping("/api/customer")
+@CrossOrigin(origins = "http://localhost:5174") // URL ng frontend
 public class CustomerController {
 
     private CustomerService customerService;
@@ -58,7 +58,7 @@ public class CustomerController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Customer>> search(@RequestParam String keyword) {
+    public ResponseEntity<List<Customer>> search(@RequestParam("keyword") String keyword) {
         List<Customer> results = customerService.search(keyword);
         return new ResponseEntity<>(results, HttpStatus.OK);
     }

@@ -75,6 +75,7 @@ function Index() {
                     WebkitBackdropFilter: 'blur(15px)',
                     zIndex: 1,
                     fontFamily: 'Poppins, sans-serif',
+                    color: 'white'
                 }}
             >
                 <h1 style={{ margin: '0px', padding: '20px', textAlign: 'center', width: '100%' }}>Login</h1>
